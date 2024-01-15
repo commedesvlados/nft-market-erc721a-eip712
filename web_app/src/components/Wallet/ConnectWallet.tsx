@@ -1,9 +1,7 @@
-import React from 'react';
-import {useAccount, useChainId, useSwitchChain} from "wagmi";
+import {useAccount} from "wagmi";
 import Account from "./Account.tsx";
 import WalletOptions from "./WalletOptions.tsx";
-import {sepolia} from "wagmi/chains";
-import {Button} from "reactstrap";
+
 
 const ConnectWallet = () => {
 	const { isConnected } = useAccount();

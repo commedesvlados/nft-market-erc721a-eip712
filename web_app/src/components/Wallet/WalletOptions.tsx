@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {useEffect} from "react";
 import { Connector, useConnect } from 'wagmi'
 import {Button} from "reactstrap";

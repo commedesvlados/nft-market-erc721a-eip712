@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Col, Row} from "reactstrap";
 import OfferCard from "./OfferCard.tsx";
 import nftOffers from "../../contracts/Offers.json"
@@ -18,10 +18,17 @@ const Offers = () => {
 
 			<Row className="gy-4" xs="1" md="2" lg="4">
 				{nftOffers?.map((offer, i) => {
+					const convertedOffer = {
+						nonce: BigInt(offer?.nonce),
+						quantity: BigInt(offer?.quantity),
+						price: BigInt(offer?.price),
+						signature: offer?.signature,
+					}
+
 					if (toggleCards || (!toggleCards && i < startCardCount)) {
 						return (
 							<Col key={i} className="">
-								<OfferCard key={i} offer={offer} />
+								<OfferCard key={i} offer={convertedOffer} />
 							</Col>
 						);
 					}
@@ -30,13 +37,12 @@ const Offers = () => {
 				})}
 			</Row>
 
-			<Button
-				color="light"
-				onClick={handleToggleCards}
-			>
-				{toggleCards ? hideText : seeMoreText}
-			</Button>
-
+			{nftOffers.length > startCardCount
+				? (<Button color="light" onClick={handleToggleCards}>
+					{toggleCards ? hideText : seeMoreText}
+				</Button>)
+				: null
+			}
 		</div>
 	);
 };

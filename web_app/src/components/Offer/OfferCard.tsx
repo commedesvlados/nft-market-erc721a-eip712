@@ -1,12 +1,10 @@
-import React, {FormEvent, useEffect} from 'react';
+import {FormEvent, useEffect} from 'react';
 import {Button, Card, CardBody, CardTitle, Form, Input, UncontrolledTooltip} from "reactstrap";
 import {ethers} from "ethers";
-import {useWaitForTransactionReceipt, useWriteContract, type BaseError, useVerifyTypedData} from "wagmi";
+import {useWaitForTransactionReceipt, useWriteContract, type BaseError} from "wagmi";
 import abi from '../../contracts/abi/NFTMarketplace.json';
 import {toast} from "react-toastify";
-import {domain, types} from "./offerSignData.ts";
-import {sepolia} from "wagmi/chains";
-import {config} from "../../config/config.ts";
+
 
 const marketContractConfig = {
 	abi,
@@ -15,10 +13,10 @@ const marketContractConfig = {
 
 interface IOfferCardProps {
 	offer: {
-		nonce;
-		quantity;
-		price;
-		signature;
+		nonce: bigint;
+		quantity: bigint;
+		price: bigint;
+		signature: string;
 	}
 }
 const OfferCard = ({offer}: IOfferCardProps) => {
@@ -49,7 +47,7 @@ const OfferCard = ({offer}: IOfferCardProps) => {
 			...marketContractConfig,
 			functionName: 'redeem',
 			args: [address, offer],
-			value: offer.price
+			value: offer.price,
 		});
 	};
 
@@ -66,7 +64,7 @@ const OfferCard = ({offer}: IOfferCardProps) => {
 			<CardBody className="d-flex flex-column">
 
 				<div>
-					<CardTitle tag="h5">Quantity: {offer.quantity}</CardTitle>
+					<CardTitle tag="h5">Quantity: {Number(offer.quantity)}</CardTitle>
 					<CardTitle tag="h5">Price: {ethers.formatUnits(offer.price)} ETH</CardTitle>
 
 					<CardTitle tag="h5" id={"SignatureTooltip" + offer.signature}>

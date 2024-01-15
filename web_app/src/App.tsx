@@ -1,9 +1,8 @@
-import React from "react";
 import './css/App.css'
+import {useAccount} from "wagmi";
 import ConnectWallet from "./components/Wallet/ConnectWallet.tsx";
 import Collection from "./components/Collection/Collection.tsx";
 import Offers from "./components/Offer/Offers.tsx";
-import {useAccount} from "wagmi";
 
 
 

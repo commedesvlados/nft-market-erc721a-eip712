@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {BaseError, useReadContract, useReadContracts} from 'wagmi'
+import {useEffect, useState} from 'react';
+import {useReadContract, useReadContracts} from 'wagmi'
 import { toast } from "react-toastify";
 
 import CollectionCard from "./CollectionCard.tsx";
@@ -23,12 +23,13 @@ const Collection = () => {
 	});
 
 	const {data: tokenURIs, error: tokenURIsError} = useReadContracts({
+		// @ts-ignore
 		contracts: [...new Array(Number(totalSupply ? totalSupply : 0))].map(
 			(_, i) => ({
 				...collectionContractConfig,
 				functionName: 'tokenURI',
 				args: [BigInt(i)],
-			})
+			}) as const,
 		)
 	});
 
@@ -36,8 +37,8 @@ const Collection = () => {
 	const handleToggleCards = () => setToggleCards((prevState) => !prevState);
 
 	useEffect(() => {
-		if (totalSupplyError) toast.error(totalSupplyError.reason);
-		if (tokenURIsError) toast.error(tokenURIsError.reason);
+		if (totalSupplyError) toast.error(totalSupplyError.message);
+		if (tokenURIsError) toast.error(tokenURIsError.message);
 	}, [totalSupplyError, tokenURIsError]);
 
 	return (
@@ -55,7 +56,7 @@ const Collection = () => {
 						if (toggleCards || (!toggleCards && i < startCardCount)) {
 							return (
 								<Col key={i} className="">
-									<CollectionCard key={i} imgSrc={uri.result} tokenId={i}/>
+									<CollectionCard key={i} imgSrc={uri.result as string} tokenId={i}/>
 								</Col>
 							);
 						}
@@ -66,12 +67,12 @@ const Collection = () => {
 				}
 			</Row>
 
-			<Button
-				color="light"
-				onClick={handleToggleCards}
-			>
-				{toggleCards ? hideText : seeMoreText}
-			</Button>
+			{tokenURIs?.length && tokenURIs?.length > startCardCount
+				? (<Button color="light" onClick={handleToggleCards}>
+					{toggleCards ? hideText : seeMoreText}
+				</Button>)
+				: null
+			}
 		</div>
 	);
 };
